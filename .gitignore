@@ -1,0 +1,24 @@
+# Node.js modulları
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Build faylları (əgər frontend build varsa)
+dist/
+build/
+
+# Ətraf mühit dəyişənləri
+.env
+.env.local
+.env.development
+.env.production
+
+# Firebase gizli açar faylı
+firebase-key.json
+
+# MacOS və digər sistem faylları
+.DS_Store
+
+# Git tərəfindən izlənməməli loglar və cache
+*.log
+.cache/

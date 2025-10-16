@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="az">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Anonim Lövhə</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-slate-100 p-6">
+    <div class="max-w-2xl mx-auto bg-white p-6 rounded-xl shadow">
+      <h1 class="text-2xl font-bold mb-4 text-center">🔥 Anonim Lövhə</h1>
+
+      <form id="postForm" class="mb-4">
+        <textarea
+          id="text"
+          class="border rounded w-full p-2 h-24 mb-2"
+          placeholder="Yazını daxil et..."
+          required
+        ></textarea>
+        <button
+          class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
+          Göndər
+        </button>
+      </form>
+
+      <ul id="posts" class="space-y-3"></ul>
+    </div>
+
+    <script>
+      async function loadPosts() {
+        const res = await fetch("/api/posts");
+        const posts = await res.json();
+        const list = document.getElementById("posts");
+        list.innerHTML = "";
+        if (!Array.isArray(posts)) return;
+        posts.forEach((p) => {
+          const li = document.createElement("li");
+          li.className = "border rounded-xl p-3 bg-white";
+          li.innerHTML = `
+            <div class='flex justify-between text-sm text-gray-600 mb-1'>
+              <strong>Anonim</strong>
+              <span>${new Date(p.ts).toLocaleString()}</span>
+            </div>
+            <div>${p.text}</div>
+          `;
+          list.appendChild(li);
+        });
+      }
+
+      document.getElementById("postForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const text = document.getElementById("text").value;
+        await fetch("/api/posts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text }),
+        });
+        document.getElementById("text").value = "";
+        loadPosts();
+      });
+
+      loadPosts();
+      setInterval(loadPosts, 3000);
+    </script>
+  </body>
+</html>
